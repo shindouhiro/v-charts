@@ -72,5 +72,6 @@ export default {
   VeTree,
   VeLiquidfill,
   VeWordcloud,
+  VeHeatmap,
   install
 }
