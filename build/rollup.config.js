@@ -27,13 +27,13 @@ pkg.forEach(item => { rollupFn(item) })
 
 fs.mkdirSync(path.resolve(__dirname, '../lib'))
 
-async function rollupFn (item) {
+async function rollupFn(item) {
   const { min, dist, suffix, src: input, type: format, globalName: name } = item
   const vueSettings = min
     ? { css: 'lib/style.min.css', postcss: [autoprefixer, cssnano] }
     : { css: 'lib/style.css', postcss: [autoprefixer] }
   const plugins = [
-    eslint(),
+    // eslint(),
     vue(vueSettings),
     resolve({ extensions: ['.js', '.vue'] }),
     babel({ plugins: ['external-helpers'] })
