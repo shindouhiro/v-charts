@@ -1,7 +1,8 @@
 <template>
     <div class="v-charts-data-empty">
         <div :style="{height}" class="v-charts-bg">
-            <img :src="require('../images/default-light.png')">
+            <img :src="require('../images/default.png')" v-if="flag==='dark'">
+            <img v-else :src="require('../images/default-light.png')">
             <div class=" pt30 ml30 ">
                 <p class=" f16 ">暂无数据</p>
             </div>
