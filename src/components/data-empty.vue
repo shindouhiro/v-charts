@@ -1,21 +1,33 @@
 <template>
     <div class="v-charts-data-empty">
-        暂无数据123
+        <div :style="{height}" class="v-charts-bg">
+            <img v-if="flag==='dark'" src="./images/default.png">
+            <img v-else src="./images/default-light.png">
+            <div class="pt30 ml30 ">
+                <p class="f16 ">暂无数据</p>
+            </div>
+        </div>
     </div>
 </template>
-
-<style>
-    .v-charts-data-empty {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
+<script>
+export default {
+    props: {
+        flag: String,
+        height: String
+    },
+};
+</script>
+<style scoped>
+    .f16 {
+        padding-top: 30px;
+        margin-left: 30px;
+        font-size: 16px;
+        color: #a0a3a8;
+    }
+    .v-charts-bg {
         display: flex;
-        justify-content: center;
+        justify-items: center;
         align-items: center;
-        background-color: rgba(255, 255, 255, 0.9);
-        color: #888;
-        font-size: 14px;
     }
 </style>
+

@@ -23,9 +23,10 @@ import {
 import setExtend from './modules/extend'
 import setMark from './modules/mark'
 import setAnimation from './modules/animation'
-
+import dark from "./dark";
+import light from "./light";
 export default {
-  render (h) {
+  render(h) {
     return h('div', {
       class: [camelToKebab(this.$options.name || this.$options._componentTag)],
       style: this.canvasStyle
@@ -36,7 +37,11 @@ export default {
         ref: 'canvas'
       }),
       h(DataEmpty, {
-        style: { display: this.dataEmpty ? '' : 'none' }
+        style: { display: this.dataEmpty ? '' : 'none' },
+        props: {
+          height: this.height,
+          flag: this.flag
+        }
       }),
       h(Loading, {
         style: { display: this.loading ? '' : 'none' }
@@ -46,8 +51,9 @@ export default {
   },
 
   props: {
-    data: { type: [Object, Array], default () { return {} } },
-    settings: { type: Object, default () { return {} } },
+    flag: { type: String, default: 'dark' },
+    data: { type: [Object, Array], default() { return {} } },
+    settings: { type: Object, default() { return {} } },
     width: { type: String, default: 'auto' },
     height: { type: String, default: '400px' },
     beforeConfig: { type: Function },
@@ -66,7 +72,7 @@ export default {
     visualMap: { type: [Object, Array] },
     dataZoom: { type: [Object, Array] },
     toolbox: { type: [Object, Array] },
-    initOptions: { type: Object, default () { return {} } },
+    initOptions: { type: Object, default() { return {} } },
     title: [Object, Array],
     legend: [Object, Array],
     xAxis: [Object, Array],
@@ -102,12 +108,19 @@ export default {
   watch: {
     data: {
       deep: true,
-      handler (v) { if (v) { this.changeHandler() } }
+      handler(v) { if (v) { this.changeHandler() } }
     },
-
+    flag: {
+      handler() {
+        // debugger
+        console.log(this.flag)
+        this.theme = this.flag === 'dark' ? dark : light
+        console.log(this.theme)
+      },
+    },
     settings: {
       deep: true,
-      handler (v) {
+      handler(v) {
         if (v.type && this.chartLib) this.chartHandler = this.chartLib[v.type]
         this.changeHandler()
       }
@@ -132,7 +145,7 @@ export default {
   },
 
   computed: {
-    canvasStyle () {
+    canvasStyle() {
       return {
         width: this.width,
         height: this.height,
@@ -140,13 +153,13 @@ export default {
       }
     },
 
-    chartColor () {
+    chartColor() {
       return this.colors || (this.theme && this.theme.color) || DEFAULT_COLORS
     }
   },
 
   methods: {
-    dataHandler () {
+    dataHandler() {
       if (!this.chartHandler) return
       let data = this.data
       const { columns = [], rows = [] } = data
@@ -170,9 +183,9 @@ export default {
       }
     },
 
-    nextTickResize () { this.$nextTick(this.resize) },
+    nextTickResize() { this.$nextTick(this.resize) },
 
-    resize () {
+    resize() {
       if (!this.cancelResizeCheck) {
         if (this.$el &&
           this.$el.clientWidth &&
@@ -184,9 +197,9 @@ export default {
       }
     },
 
-    echartsResize () { this.echarts && this.echarts.resize() },
+    echartsResize() { this.echarts && this.echarts.resize() },
 
-    optionsHandler (options) {
+    optionsHandler(options) {
       // legend
       if (this.legendPosition && options.legend) {
         options.legend[this.legendPosition] = 10
@@ -260,7 +273,7 @@ export default {
       }
     },
 
-    judgeWidthHandler (options) {
+    judgeWidthHandler(options) {
       const { widthChangeDelay, resize } = this
       if (this.$el.clientWidth || this.$el.clientHeight) {
         resize()
@@ -280,12 +293,12 @@ export default {
       }
     },
 
-    resizeableHandler (resizeable) {
+    resizeableHandler(resizeable) {
       if (resizeable && !this._once.onresize) this.addResizeListener()
       if (!resizeable && this._once.onresize) this.removeResizeListener()
     },
 
-    init () {
+    init() {
       if (this.echarts) return
       const themeName = this.themeName || this.theme || DEFAULT_THEME
       this.echarts = echartsLib.init(this.$refs.canvas, themeName, this.initOptions)
@@ -294,17 +307,17 @@ export default {
       if (this.resizeable) this.addResizeListener()
     },
 
-    addResizeListener () {
+    addResizeListener() {
       window.addEventListener('resize', this.resizeHandler)
       this._once.onresize = true
     },
 
-    removeResizeListener () {
+    removeResizeListener() {
       window.removeEventListener('resize', this.resizeHandler)
       this._once.onresize = false
     },
 
-    addWatchToProps () {
+    addWatchToProps() {
       const watchedVariable = this._watchers.map(watcher => watcher.expression)
       Object.keys(this.$props).forEach(prop => {
         if (!~watchedVariable.indexOf(prop) && !~STATIC_PROPS.indexOf(prop)) {
@@ -319,7 +332,7 @@ export default {
       })
     },
 
-    createEventProxy () {
+    createEventProxy() {
       // 只要用户使用 on 方法绑定的事件都做一层代理，
       // 是否真正执行相应的事件方法取决于该方法是否仍然存在 events 中
       // 实现 events 的动态响应
@@ -339,19 +352,19 @@ export default {
       })
     },
 
-    themeChange (theme) {
+    themeChange(theme) {
       this.clean()
       this.echarts = null
       this.init()
     },
 
-    clean () {
+    clean() {
       if (this.resizeable) this.removeResizeListener()
       this.echarts.dispose()
     }
   },
 
-  created () {
+  created() {
     this.echarts = null
     this.registeredEvents = []
     this._once = {}
@@ -361,11 +374,11 @@ export default {
     this.addWatchToProps()
   },
 
-  mounted () {
+  mounted() {
     this.init()
   },
 
-  beforeDestroy () {
+  beforeDestroy() {
     this.clean()
   },
 
