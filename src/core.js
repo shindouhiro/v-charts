@@ -111,9 +111,7 @@ export default {
       handler(v) { if (v) { this.changeHandler() } }
     },
     flag: {
-      handler() {
-        this.init()
-      },
+      handler: 'themeChange'
     },
     settings: {
       deep: true,
