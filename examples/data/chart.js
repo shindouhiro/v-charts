@@ -3,6 +3,7 @@ export default {
   type: 'chart',
   data: [
     {
+      flag: 'light',
       name: '折线图',
       data: {
         columns: ['日期', '余额', '年龄'],

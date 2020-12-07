@@ -112,10 +112,7 @@ export default {
     },
     flag: {
       handler() {
-        // debugger
-        console.log(this.flag)
-        this.theme = this.flag === 'dark' ? dark : light
-        console.log(this.theme)
+        this.init()
       },
     },
     settings: {
@@ -159,6 +156,9 @@ export default {
   },
 
   methods: {
+    getSkin() {
+      return this.flag === 'dark' ? dark : light
+    },
     dataHandler() {
       if (!this.chartHandler) return
       let data = this.data
@@ -300,7 +300,7 @@ export default {
 
     init() {
       if (this.echarts) return
-      const themeName = this.themeName || this.theme || DEFAULT_THEME
+      const themeName = this.themeName || this.theme || this.getSkin() || DEFAULT_THEME
       this.echarts = echartsLib.init(this.$refs.canvas, themeName, this.initOptions)
       if (this.data) this.changeHandler()
       this.createEventProxy()

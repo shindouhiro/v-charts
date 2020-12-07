@@ -3,6 +3,7 @@ export default {
   type: 'bar',
   data: [
     {
+      flag: 'light',
       name: '简单条形图',
       data: {
         columns: ['日期', '余额', '年龄'],
@@ -18,6 +19,7 @@ export default {
       settings: {}
     },
     {
+      flag: 'dark',
       name: '排序条形图',
       data: {
         columns: ['日期', '余额', '年龄'],
